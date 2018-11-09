@@ -14,7 +14,10 @@ compare_trees(HForest::tree_t t1, HForest::tree_t t2)
 {
   return t1->get_value() > t2->get_value();
 }
-
+static bool
+min_tree(HForest::tree_t t1, HForest::tree_t t2) {
+    return t1 -> get_value() < t2 -> get_value();
+}
 //////////////////////////////////////////////////////////////////////////////
 // Add a single tree to the forest:
 void
@@ -37,4 +40,12 @@ HForest::pop_top()
   trees_.pop_back();
   return ret;
 }
-
+HForest::tree_t HForest::get_min() {
+  if (trees_.empty()) {
+    return nullptr;
+  }
+  std::pop_heap(trees_.begin(), trees_.end(), min_tree);
+  auto ret = trees_.back();
+  trees_.pop_back();
+  return ret;
+}

@@ -35,5 +35,7 @@ class Huffman {
         // Finally, updates the frequency table with this additional symbol.
         int decode(bool bit);
     private:
-        std::vector<int> frequencies;
+        HTree::tree_ptr_t build_tree();
+        std::vector<int> freq;
+        HTree::tree_ptr_t root;
 };
