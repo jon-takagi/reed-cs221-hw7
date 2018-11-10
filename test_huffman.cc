@@ -11,27 +11,42 @@
 // Ensure the encoder actually modifies the coding' length as expected
 void test_encode()
 {
-  Huffman huff;
+    Huffman huff;
 
-  auto bits = huff.encode('a');
-  assert(bits.size() > CHAR_BIT);
+    auto bits = huff.encode('a');
+    std::cout << bits.size() << "\n";
+    for(auto b: bits) {
+      std::cout << b << " ";
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+    std::cout << "~~~~~~~~~~~~~";
+    std::cout << "\n";
+    std::cout << "\n";
 
-  bits = huff.encode('b');
-  assert(bits.size() > CHAR_BIT);
+    assert(bits.size() > CHAR_BIT);
 
-  bits = huff.encode('a');
-  assert(bits.size() < CHAR_BIT);
+    bits = huff.encode('b');
+    assert(bits.size() > CHAR_BIT);
 
-  bits = huff.encode('b');
-  assert(bits.size() < CHAR_BIT);
+    bits = huff.encode('a');
+    std::cout << bits.size() << "\n";
+    for(auto b: bits) {
+      std::cout << b << " ";
+    }
+    std::cout << "\n";
+    assert(bits.size() < CHAR_BIT);
 
-  bits = huff.encode('b');
-  assert(bits.size() == huff.encode('a').size());
+    bits = huff.encode('b');
+    assert(bits.size() < CHAR_BIT);
 
-  bits = huff.encode('b');
-  bits = huff.encode('b');
-  bits = huff.encode('b');
-  assert(bits.size() < huff.encode('a').size());
+    bits = huff.encode('b');
+    assert(bits.size() == huff.encode('a').size());
+
+    bits = huff.encode('b');
+    bits = huff.encode('b');
+    bits = huff.encode('b');
+    assert(bits.size() < huff.encode('a').size());
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -39,13 +54,13 @@ void test_encode()
 // figures out which symbol these bits encode.
 int decode_symbol(Huffman& huff, const Huffman::bits_t& bits)
 {
-  int symbol = -1;
+    int symbol = -1;
 
-  for (auto b : bits) {
+    for (auto b : bits) {
     symbol = huff.decode(b);
-  }
-  assert(symbol >= 0);
-  return symbol;
+    }
+    assert(symbol >= 0);
+    return symbol;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -53,25 +68,34 @@ int decode_symbol(Huffman& huff, const Huffman::bits_t& bits)
 // scenarios.
 void test_decode()
 {
-  Huffman encoder, decoder;
+    Huffman encoder, decoder;
 
-  auto bits = encoder.encode('a');
-  assert(decode_symbol(decoder, bits) == 'a');
-  bits = encoder.encode('a');
-  assert(decode_symbol(decoder, bits) == 'a');
-  bits = encoder.encode('b');
-  assert(decode_symbol(decoder, bits) == 'b');
-  bits = encoder.encode('a');
-  assert(decode_symbol(decoder, bits) == 'a');
-  bits = encoder.encode(Huffman::HEOF);
-  assert(decode_symbol(decoder, bits) == Huffman::HEOF);
+    auto bits = encoder.encode('a');
+    assert(decode_symbol(decoder, bits) == 'a');
+    bits = encoder.encode('a');
+    assert(decode_symbol(decoder, bits) == 'a');
+    bits = encoder.encode('b');
+    assert(decode_symbol(decoder, bits) == 'b');
+    bits = encoder.encode('a');
+    assert(decode_symbol(decoder, bits) == 'a');
+    bits = encoder.encode(Huffman::HEOF);
+    assert(decode_symbol(decoder, bits) == Huffman::HEOF);
 }
 
+void test_build_tree() {
+    Huffman huff;
+    auto bits = huff.encode(97);
+    std::cout << huff.get_freq().at('a') << "\n";
+    for(auto b : bits) {
+        std::cout << b << " ";
+    }
+    std::cout << "\n";
+}
 //////////////////////////////////////////////////////////////////////////////
 int main()
 {
+    // test_build_tree();
   test_encode();
   test_decode();
   return 0;
 }
-

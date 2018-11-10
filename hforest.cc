@@ -9,13 +9,11 @@
 
 //////////////////////////////////////////////////////////////////////////////
 // Comparator function for std::*_heap
-static bool
-compare_trees(HForest::tree_t t1, HForest::tree_t t2)
+static bool compare_trees(HForest::tree_t t1, HForest::tree_t t2)
 {
-  return t1->get_value() > t2->get_value();
+    return t1->get_value() > t2->get_value();
 }
-static bool
-min_tree(HForest::tree_t t1, HForest::tree_t t2) {
+static bool min_tree(HForest::tree_t t1, HForest::tree_t t2) {
     return t1 -> get_value() < t2 -> get_value();
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -23,8 +21,8 @@ min_tree(HForest::tree_t t1, HForest::tree_t t2) {
 void
 HForest::add_tree(tree_t tree)
 {
-  trees_.push_back(tree);
-  std::push_heap(trees_.begin(), trees_.end(), compare_trees);
+    trees_.push_back(tree);
+    std::push_heap(trees_.begin(), trees_.end(), compare_trees);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -32,20 +30,21 @@ HForest::add_tree(tree_t tree)
 HForest::tree_t
 HForest::pop_top()
 {
-  if (trees_.empty()) {
+    if (trees_.empty()) {
     return nullptr;
-  }
-  std::pop_heap(trees_.begin(), trees_.end(), compare_trees);
-  auto ret = trees_.back();
-  trees_.pop_back();
-  return ret;
+    }
+    std::pop_heap(trees_.begin(), trees_.end(), compare_trees);
+    auto ret = trees_.back();
+    trees_.pop_back();
+    return ret;
 }
 HForest::tree_t HForest::get_min() {
-  if (trees_.empty()) {
+    if (trees_.empty()) {
     return nullptr;
-  }
-  std::pop_heap(trees_.begin(), trees_.end(), min_tree);
-  auto ret = trees_.back();
-  trees_.pop_back();
-  return ret;
+    }
+    std::make_heap(trees_.begin(), trees_.end(), min_tree);
+    auto ret = trees_.back();
+    trees_.pop_back();
+    std::make_heap(trees_.begin(), trees_.end(), compare_trees);
+    return ret;
 }
