@@ -14,7 +14,7 @@ void test_encode()
     Huffman huff;
 
     auto bits = huff.encode('a');
-    std::cout << bits.size() << "\n";
+    std::cout << "bits size" << bits.size() << "\n";
     for(auto b: bits) {
       std::cout << b << " ";
     }

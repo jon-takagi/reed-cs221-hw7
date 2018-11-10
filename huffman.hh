@@ -11,10 +11,10 @@
 #include "htree.hh"
 
 class Huffman {
-    // public:
+    public:
     //     // Maximum number of symbols we need to encode (a symbol fits in a char) + EOF
-    //     static const int ALPHABET_SIZE = (1 << CHAR_BIT) + 1;          // (2 ** 8) + 1
-        static const int ALPHABET_SIZE = 5;
+        static const int ALPHABET_SIZE = (1 << CHAR_BIT) + 1;          // (2 ** 8) + 1
+        // static const int ALPHABET_SIZE = 5;
         static const int HEOF = ALPHABET_SIZE - 1;          // Special symbol to denote end of file
 
         using bits_t = std::vector<bool>;

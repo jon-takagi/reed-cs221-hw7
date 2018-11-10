@@ -14,6 +14,9 @@ static bool compare_trees(HForest::tree_t t1, HForest::tree_t t2)
     return t1->get_value() > t2->get_value();
 }
 static bool min_tree(HForest::tree_t t1, HForest::tree_t t2) {
+    // if(t1 -> get_value() == t2 -> get_value()) {
+    //     return t1 -> get_key() < t2 -> get_key();
+    // }
     return t1 -> get_value() < t2 -> get_value();
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -39,12 +42,24 @@ HForest::pop_top()
     return ret;
 }
 HForest::tree_t HForest::get_min() {
-    if (trees_.empty()) {
-    return nullptr;
-    }
-    std::make_heap(trees_.begin(), trees_.end(), min_tree);
+    // if (trees_.empty()) {
+    // return nullptr;
+    // }
+    // std::make_heap(trees_.begin(), trees_.end(), min_tree);
+    // auto ret = trees_.back();
+    // trees_.pop_back();
+    // std::make_heap(trees_.begin(), trees_.end(), compare_trees);
+    // return ret;
+
+    // std::sort(trees_.begin(), trees_.end());
+
+    std::sort(trees_.begin(), trees_.end(), min_tree);
+
+    // sorts trees in ascending order using <
+    std::reverse(trees_.begin(), trees_.end());
+    //reverses the order
+    //trees_ is now in descending order - smallest is at the back
     auto ret = trees_.back();
     trees_.pop_back();
-    std::make_heap(trees_.begin(), trees_.end(), compare_trees);
     return ret;
 }

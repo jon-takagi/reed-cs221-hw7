@@ -89,7 +89,7 @@ HTree::tree_ptr_t Huffman::build_tree() {
     	HTree::tree_ptr_t newTree(new HTree(char(i), freq.at(i)));
     	heap.add_tree(newTree);
     }
-    int i = -1;
+    int i = -257;
     // i counts up to become the fake key for the new value
     while(heap.size() > 1) {
     	HTree::tree_ptr_t l = heap.get_min(); //pop the lowest value off the heap
@@ -97,7 +97,7 @@ HTree::tree_ptr_t Huffman::build_tree() {
     	int temp_val = l->get_value() + r->get_value();
     	HTree::tree_ptr_t temp = HTree::tree_ptr_t(new HTree(i, temp_val,l,r));
     	heap.add_tree(temp);
-        i = i - 1;
+        i += 1;
     }
     return heap.pop_top();
 }
