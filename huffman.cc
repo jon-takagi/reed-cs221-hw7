@@ -11,7 +11,19 @@ Huffman::~Huffman(){
 Huffman::Huffman()
 {
     freq = {};
+    // actuall line
     freq.assign(ALPHABET_SIZE, 0);
+
+    // testing freqency tree w/ non zero freqency
+    // for(int i = 0; i < ALPHABET_SIZE; i++) {
+    //     freq.push_back(i);
+    // }
+    //
+    // for(int a: freq) {
+    //     std::cout << std::to_string(a) <<"\n";
+    // }
+
+    // end testing
     root = build_tree();
 }
 
@@ -40,7 +52,7 @@ Huffman::bits_t Huffman::encode(int symbol) {
     auto path = root->path_to(symbol);
     Huffman::bits_t bin_path = {};
     for(HTree::Direction d : path) {
-	bin_path.push_back(d == HTree::Direction::LEFT);
+        bin_path.push_back(d == HTree::Direction::LEFT);
 // left is 0
 // this statement is equivalent to if left push true else push right
 // bin_path is now full of 'true' and 'false'
