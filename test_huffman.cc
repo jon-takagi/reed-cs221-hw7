@@ -8,6 +8,7 @@
 #include <climits>
 #include "hforest.hh"
 #include <iomanip>
+#include <fstream>
 //////////////////////////////////////////////////////////////////////////////
 // Ensure the encoder actually modifies the coding' length as expected
 void test_encode()
@@ -100,6 +101,8 @@ bool verify_shape(HTree::tree_ptr_t node) {
 }
 //pretty prints a tree, stolen from stackoverflow
 void pretty_print(HTree::tree_ptr_t node, int indent=0) {
+    std::ofstream huff_of;
+    huff_of.open("huffman.txt", std::ios::app);
     HTree::Direction l = HTree::Direction::LEFT;
     HTree::Direction r = HTree::Direction::RIGHT;
     if(node != nullptr) {
@@ -107,27 +110,27 @@ void pretty_print(HTree::tree_ptr_t node, int indent=0) {
             pretty_print(node -> get_child(r), indent+4);
 
         if(indent) {
-            std::cout << std::setw(indent) << ' ';
+            huff_of << std::setw(indent) << ' ';
         }
         if(node -> get_child(r)) {
-            std::cout<<" /\n" << std::setw(indent) << ' ';
+            huff_of<<" /\n" << std::setw(indent) << ' ';
         }
-        std::cout<< node -> get_key() << "\n ";
+        huff_of<< node -> get_key() << "\n ";
 
         if(node -> get_child(l)) {
-            std::cout << std::setw(indent) << ' ' <<" \\\n";
+            huff_of << std::setw(indent) << ' ' <<" \\\n";
             pretty_print(node -> get_child(l), indent+4);
         }
     }
 }
-void no_fake_leaves(HTree::tree_ptr_t node) {
+bool no_fake_leaves(HTree::tree_ptr_t node) {
     bool l = true;
     bool r = true;
     if(node->get_child(HTree::Direction::LEFT)) {
-    	l = l && inorder_traversal(node->get_child(HTree::Direction::LEFT));
+    	l = l && no_fake_leaves(node->get_child(HTree::Direction::LEFT));
     }
     if (node->get_child(HTree::Direction::RIGHT)) {
-    	r = r && inorder_traversal(node->get_child(HTree::Direction::RIGHT));
+    	r = r && no_fake_leaves(node->get_child(HTree::Direction::RIGHT));
     }
     bool res = l && r;
     if(is_leaf(node)) {
@@ -168,17 +171,17 @@ void test_build_tree() {
     // std::cout <<"heap size: " << heap.size() << "\n";
 
     Huffman huff;
-    HTree::Direction l = HTree::Direction::LEFT;
-    HTree::Direction r = HTree::Direction::RIGHT;
-    std::cout << "root   :" << huff.get_root() -> get_key()<< "\n";
-    std::cout << "l      :" << huff.get_root() -> get_child(l) -> get_key()<< "\n";
-    std::cout << "r      :" << huff.get_root() -> get_child(r) -> get_key()<< "\n";
-    std::cout << "r l    :" << huff.get_root() -> get_child(r) -> get_child(l) -> get_key()<< "\n";
-    std::cout << "r r    :" << huff.get_root() -> get_child(r) -> get_child(r) -> get_key()<< "\n";
-    std::cout << "r r l  :" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(l) -> get_key()<< "\n";
-    std::cout << "r r r  :" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(r) -> get_key()<< "\n";
-    std::cout << "r r r r:" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(r) -> get_child(r) -> get_key()<< "\n";
-    std::cout << "r r r l:" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(r) -> get_child(l) -> get_key()<< "\n";
+    // HTree::Direction l = HTree::Direction::LEFT;
+    // HTree::Direction r = HTree::Direction::RIGHT;
+    // std::cout << "root   :" << huff.get_root() -> get_key()<< "\n";
+    // std::cout << "l      :" << huff.get_root() -> get_child(l) -> get_key()<< "\n";
+    // std::cout << "r      :" << huff.get_root() -> get_child(r) -> get_key()<< "\n";
+    // std::cout << "r l    :" << huff.get_root() -> get_child(r) -> get_child(l) -> get_key()<< "\n";
+    // std::cout << "r r    :" << huff.get_root() -> get_child(r) -> get_child(r) -> get_key()<< "\n";
+    // std::cout << "r r l  :" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(l) -> get_key()<< "\n";
+    // std::cout << "r r r  :" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(r) -> get_key()<< "\n";
+    // std::cout << "r r r r:" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(r) -> get_child(r) -> get_key()<< "\n";
+    // std::cout << "r r r l:" << huff.get_root() -> get_child(r) -> get_child(r)  -> get_child(r) -> get_child(l) -> get_key()<< "\n";
 
     // auto path = huff.get_root() -> path_to(3);
     // Huffman::bits_t bin_path = {};
@@ -198,7 +201,12 @@ void test_build_tree() {
         std::cout << "wrong shape" <<"\n";
     }
     std::cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" <<"\n";
-    // pretty_print(huff.get_root());
+    pretty_print(huff.get_root());
+    if(no_fake_leaves(huff.get_root())) {
+        std::cout << "no fake leaves" << "\n";
+    } else {
+        std::cout << "found leaves with negative key" << "\n";
+    }
 }
 //////////////////////////////////////////////////////////////////////////////
 int main()

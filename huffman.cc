@@ -3,6 +3,7 @@
 #include "htree.hh"
 #include "hforest.hh"
 #include <iostream>
+#include <cassert>
 
 
 Huffman::~Huffman(){
@@ -105,11 +106,16 @@ HTree::tree_ptr_t Huffman::build_tree() {
     // i counts up to become the fake key for the new value
     while(heap.size() > 1) {
     	HTree::tree_ptr_t l = heap.get_min(); //pop the lowest value off the heap
+        assert(l != nullptr);
+        // weird issues with getting leaves w negative key
     	HTree::tree_ptr_t r = heap.get_min(); //pop the second lowest off the heap
+        assert(r != nullptr);
     	int temp_val = l->get_value() + r->get_value();
-    	HTree::tree_ptr_t temp = HTree::tree_ptr_t(new HTree(i, temp_val,l,r));
-    	heap.add_tree(temp);
+    	HTree::tree_ptr_t temp = HTree::tree_ptr_t(new HTree( i, temp_val,l,r));
+        // negative key means fake node
+        // should never end up as leaf
         i += 1;
+    	heap.add_tree(temp);
     }
     return heap.pop_top();
 }
