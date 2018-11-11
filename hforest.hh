@@ -26,10 +26,6 @@ class HForest {
 
         // Return the tree with the highest priority (and remove it from forest)
         tree_t pop_top();
-        HTree::tree_ptr_t get_min();
-
-        // for testing only
-        std::vector<tree_t> get_trees();
     private:
         std::vector<tree_t> trees_;
 };

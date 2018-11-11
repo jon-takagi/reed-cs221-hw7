@@ -79,7 +79,7 @@ int Huffman::decode(bool bit) {
     	root = root->get_child(HTree::Direction::RIGHT);
     }
     if(!root->get_child(HTree::Direction::RIGHT) && !root->get_child(HTree::Direction::LEFT)) {
-    	auto symbol = root->get_value();
+    	auto symbol = root->get_key();
 
     	root = nullptr;
     // reset node after returning
@@ -89,7 +89,7 @@ int Huffman::decode(bool bit) {
     	return symbol;
     } else {
 // root is still a node, so calling it again doesn't call build_tree
-    	return root->get_value();
+    	return root->get_key();
     }
 }
 
@@ -99,19 +99,26 @@ HTree::tree_ptr_t Huffman::build_tree() {
     HForest heap({});
 
     for(int i = 0; i < ALPHABET_SIZE; i++) {
-    	HTree::tree_ptr_t newTree(new HTree(char(i), freq.at(i)));
+    	// HTree::tree_ptr_t newTree(new HTree(char(i), freq.at(i)));
+    	HTree::tree_ptr_t newTree(new HTree(i, freq.at(i)));
+        assert(newTree -> get_key() >= 0);
     	heap.add_tree(newTree);
     }
     int i = -257;
     // i counts up to become the fake key for the new value
     while(heap.size() > 1) {
-    	HTree::tree_ptr_t l = heap.get_min(); //pop the lowest value off the heap
+    	HTree::tree_ptr_t l = heap.pop_top(); //pop the lowest value off the heap
         assert(l != nullptr);
         // weird issues with getting leaves w negative key
-    	HTree::tree_ptr_t r = heap.get_min(); //pop the second lowest off the heap
+    	HTree::tree_ptr_t r = heap.pop_top(); //pop the second lowest off the heap
+        if(l -> get_key() < 0) {
+            HTree::tree_ptr_t temp = l;
+            l = r;
+            r = temp;
+        }
         assert(r != nullptr);
     	int temp_val = l->get_value() + r->get_value();
-    	HTree::tree_ptr_t temp = HTree::tree_ptr_t(new HTree( i, temp_val,l,r));
+    	HTree::tree_ptr_t temp = HTree::tree_ptr_t(new HTree(i, temp_val,l,r));
         // negative key means fake node
         // should never end up as leaf
         i += 1;

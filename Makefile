@@ -28,6 +28,7 @@ decoder: decoder.o  bitio.o huffman.o hforest.o
 
 clean:
 	rm -rf *.o test_bitio encoder decoder
+	rm huffman.txt
 
 test: all
 	./test_tree

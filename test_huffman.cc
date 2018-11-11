@@ -16,15 +16,6 @@ void test_encode()
     Huffman huff;
 
     auto bits = huff.encode('a');
-    std::cout << "bits size: " << bits.size() << "\n";
-    for(auto b: bits) {
-      std::cout << b << " ";
-    }
-    std::cout << "\n";
-    std::cout << "\n";
-    std::cout << "~~~~~~~~~~~~~";
-    std::cout << "\n";
-    std::cout << "\n";
 
     assert(bits.size() > CHAR_BIT);
 
@@ -32,11 +23,6 @@ void test_encode()
     assert(bits.size() > CHAR_BIT);
 
     bits = huff.encode('a');
-    std::cout << bits.size() << "\n";
-    for(auto b: bits) {
-      std::cout << b << " ";
-    }
-    std::cout << "\n";
     assert(bits.size() < CHAR_BIT);
 
     bits = huff.encode('b');
@@ -106,36 +92,32 @@ void pretty_print(HTree::tree_ptr_t node, int indent=0) {
     HTree::Direction l = HTree::Direction::LEFT;
     HTree::Direction r = HTree::Direction::RIGHT;
     if(node != nullptr) {
-        if(node -> get_child(r))
-            pretty_print(node -> get_child(r), indent+4);
-
-        if(indent) {
-            huff_of << std::setw(indent) << ' ';
-        }
-        if(node -> get_child(r)) {
-            huff_of<<" /\n" << std::setw(indent) << ' ';
-        }
-        huff_of<< node -> get_key() << "\n ";
 
         if(node -> get_child(l)) {
-            huff_of << std::setw(indent) << ' ' <<" \\\n";
             pretty_print(node -> get_child(l), indent+4);
         }
+        if(node -> get_child(r)) {
+            pretty_print(node -> get_child(r), indent+4);
+        }
+        if(indent) {
+             huff_of << std::setw(indent) << ' ';
+        }
+        huff_of<< node -> get_key() << "\n ";
     }
 }
 bool no_fake_leaves(HTree::tree_ptr_t node) {
-    bool l = true;
-    bool r = true;
-    if(node->get_child(HTree::Direction::LEFT)) {
-    	l = l && no_fake_leaves(node->get_child(HTree::Direction::LEFT));
-    }
-    if (node->get_child(HTree::Direction::RIGHT)) {
-    	r = r && no_fake_leaves(node->get_child(HTree::Direction::RIGHT));
-    }
-    bool res = l && r;
     if(is_leaf(node)) {
-        return res && node -> get_key() >= 0;
+        return node -> get_key() >= 0;
     } else {
+        bool l = true;
+        bool r = true;
+        if(node->get_child(HTree::Direction::LEFT)) {
+        	l = l && no_fake_leaves(node->get_child(HTree::Direction::LEFT));
+        }
+        if (node->get_child(HTree::Direction::RIGHT)) {
+        	r = r && no_fake_leaves(node->get_child(HTree::Direction::RIGHT));
+        }
+        bool res = l && r;
         return res;
     }
 }
@@ -195,12 +177,12 @@ void test_build_tree() {
     //     }
     // }
     std::cout <<"\n";
-    if(verify_shape(huff.get_root())) {
-        std::cout << "shape verified" <<"\n";
-    } else {
-        std::cout << "wrong shape" <<"\n";
-    }
-    std::cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" <<"\n";
+    // if(verify_shape(huff.get_root())) {
+    //     std::cout << "shape verified" <<"\n";
+    // } else {
+    //     std::cout << "wrong shape" <<"\n";
+    // }
+    // std::cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" <<"\n";
     pretty_print(huff.get_root());
     if(no_fake_leaves(huff.get_root())) {
         std::cout << "no fake leaves" << "\n";
@@ -209,11 +191,30 @@ void test_build_tree() {
     }
 }
 //////////////////////////////////////////////////////////////////////////////
+// void cout_test_decode() {
+//     Huffman encoder, decoder;
+//
+//     auto bits = encoder.encode('a');
+//     for(bool b:bits) {
+//         std::cout << b;
+//     }
+//     std::cout <<"\n";
+//
+//     Huffman huff;
+//     auto huff_bits = huff.encode('a');
+//
+//     for(bool b:huff_bits) {
+//         // std::cout << (huff.decode(b)) << "\n";
+//     }
+//     std::cout <<"\n";
+//
+//
+// }
 int main()
 {
-    test_build_tree();
+    // test_build_tree();
 
   // test_encode();
-  // test_decode();
+  test_decode();
   return 0;
 }
