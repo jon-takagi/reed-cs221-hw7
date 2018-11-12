@@ -14,8 +14,6 @@ class Huffman {
     public:
     //     // Maximum number of symbols we need to encode (a symbol fits in a char) + EOF
         static const int ALPHABET_SIZE = (1 << CHAR_BIT) + 1;          // (2 ** 8) + 1
-        // static const int ALPHABET_SIZE = 5;
-        // static const int ALPHABET_SIZE = 129;
         static const int HEOF = ALPHABET_SIZE - 1;          // Special symbol to denote end of file
 
         using bits_t = std::vector<bool>;
@@ -37,18 +35,11 @@ class Huffman {
         // Finally, updates the frequency table with this additional symbol.
         int decode(bool bit);
 
-        //remove these before release
-        //start
-        HTree::tree_ptr_t get_root() {
-            return root;
-        }
-        std::vector<int> get_freq() {
-            return freq;
-        }
-        // end
-
     private:
+        // this method builds a huffman tree using the frequencies stored in freq
         HTree::tree_ptr_t build_tree();
+        // stores a frequency table
         std::vector<int> freq;
+        // stores a huffman tree for use by encode and decode
         HTree::tree_ptr_t root;
 };
