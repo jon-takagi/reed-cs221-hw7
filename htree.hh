@@ -30,28 +30,10 @@ class HTree {
   uint64_t get_value() const { return value_; }      // Return value in current node
 
   // Return the child of this node indicated by dir
-  tree_ptr_t get_child(Direction dir) const
-  {
-    return (dir == Direction::LEFT)? left_ : right_;
-  }
+  tree_ptr_t get_child(Direction dir) const;
 
   // Crashes (with an assert) if key not contained in this tree
-  path_t path_to(int key) const
-  {
-    assert(find(key));
-
-    path_t ret;
-    if (key_ != key) {
-      if (left_ && left_->find(key)) {
-        ret = left_->path_to(key);
-        ret.push_front(Direction::LEFT);
-      } else {              // key must be in right_
-        ret = right_->path_to(key);
-        ret.push_front(Direction::RIGHT);
-      }
-    }
-    return ret;
-  }
+  path_t path_to(int key) const;
 
  private:
   int key_;
@@ -59,11 +41,6 @@ class HTree {
   tree_ptr_t left_, right_;
 
   // Return true IFF the given key is contained somewhere in my tree
-  bool find(int key) const
-  {
-    return key_ == key
-       || (left_ && left_->find(key))
-       || (right_ && right_->find(key));
-  }
+  bool find(int key) const;
 
 };
