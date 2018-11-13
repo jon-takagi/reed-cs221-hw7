@@ -9,6 +9,15 @@
 #include "hforest.hh"
 #include <iomanip>
 #include <fstream>
+
+// just... don't bother looking in here
+// i wrote a bunch of utility functions trying to debug my code
+// turns out all my errors were just
+// jon doesn't know left from right
+// 
+
+
+
 //////////////////////////////////////////////////////////////////////////////
 // Ensure the encoder actually modifies the coding' length as expected
 void test_encode()

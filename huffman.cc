@@ -25,7 +25,7 @@ Huffman::bits_t Huffman::encode(int symbol) {
     root = Huffman::build_tree();
     // path_to is a list of Directions
     // convert it to a vector of booleans
-    std::list<Direction> path = root->path_to(symbol);
+    std::list<HTree::Direction> path = root->path_to(symbol);
     Huffman::bits_t bin_path = {};
     for(HTree::Direction d : path) {
         bin_path.push_back(d == HTree::Direction::RIGHT);
@@ -62,22 +62,24 @@ int Huffman::decode(bool bit) {
         // reset root to nullptr
         // return its symbol
     if(!root->get_child(HTree::Direction::RIGHT) && !root->get_child(HTree::Direction::LEFT)) {
-    	int symbol = root->get_key();
-
+// reset node after returning
+// this causes the next call to decode to rebuild the tree
+// using a single huff as encoder and decoder won't cause issues with root being nullptr
+// because encode immediately rebuilds the tree
+        int symbol = root -> get_key();
     	root = nullptr;
-    // reset node after returning
-    // this causes the next call to decode to rebuild the tree
-    // using a single huff as encoder and decoder won't cause issues with root being nullptr
-    // because encode immediately rebuilds the tree
 
+        // update frequency
+    	// freq.at(static_cast<int>(root -> get_key())) += 1;
     	freq.at(symbol) += 1;
-    // update frequency
-    	return symbol;
+        // return static_cast<int>(root -> get_key());
+        return symbol;
     } else {
-// root is still a node, so calling it again doesn't call build_tree
-// root isn't a leaf, so its key is negative
-    	return root->get_key();
+        return root -> get_key();
     }
+    // root is still a node, so calling it again doesn't call build_tree
+    // root isn't a leaf, so its key is negative
+    // always return the key
 }
 
 // This method assumes that there exists a member called `freq` that is a vector storing the frequencies

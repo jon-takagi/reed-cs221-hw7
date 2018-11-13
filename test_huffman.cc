@@ -32,6 +32,9 @@ void test_encode()
   bits = huff.encode('b');
   bits = huff.encode('b');
   assert(bits.size() < huff.encode('a').size());
+
+  // bits = huff.encode(257);
+  // bits = huff.encode(420);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -74,4 +77,3 @@ int main()
   test_decode();
   return 0;
 }
-
