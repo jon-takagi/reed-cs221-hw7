@@ -36,6 +36,8 @@ dunno shit about this - eli did this one.
 Also, the program fails gracelessly if the file being encoded contains a character not in the extended ASCII set. To prevent this, I used [this](https://pteo.paranoiaworks.mobi/diacriticsremover/) site to remove diacritics, which are common characters not in the ASCII set.
 ## Results
 First, several test files of various lengths were chosen. The largest, the bee movie script, is 53Kb. The `encoder` program was run on each of the files located in `txt-files` directory. The encoded files are then created in the same directory and then passed to `decoder`. Because `verify` looks for `.comp.plaintext` files and matches them with their originals, the presence of the `.comp` files in `txt-files` doesn't cause errors. Note that encoding and decoding can be somewhat time consuming. Encoding `constitution.txt`, a 49Kb file, took about 1 minute on a 2017 macbook pro. Decoding the resulting file took approximately 56 seconds on the same machine.
+### Table
+
 |Filename                   | Original size (bytes) | Compressed size (bytes) | Percent of original|
 |---------------------------|-----------------------|-------------------------|--------------------|
 |bee-movie-script.txt       |52,755                 |31,409                   |59.40               |
