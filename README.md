@@ -1,17 +1,24 @@
+Partners: Eli Poppele and Jon Takagi
+
 # README
 ## Contents
-1. Declarations
-2. Implementations
-3. Testing
-4. Results
+1. Compilation instructions
+2. Declarations
+3. Implementations
+4. Files
+5. Testing
+6. Results
 
+## Compilation instructions
+This repository contains a `Makefile` that correctly compiles stuff.
 ## Declarations
-### hforest.hh
+### hforest.hh  
 This file was provided by the instructor. No changes were made, despite their descriptions as "My solutions to HW6.", which had us build a maxheap. This file describes a minheap instead.
 ### htree.hh
 This file defines a node for a tree. It was provided by the instructor and no changes were made. Also, the functions are implemented in the header file, which I'm pretty sure is a crime.
 ### bitio.hh
-Eli wrote this one. Blame him.
+Header file for the bitio Class. Includes declarations; all functions should be commented
+and explained in the actual file itself, since I comment my code, unlike some certain people.
 ### huffman.hh
 This file defines the huffman class. A `huffman` object has two member functions as specified by the assignment: `encode` a character and get back a vector of booleans, and `decode`, which takes a single bit and returns the integer representation of the character it encodes.
 It has one private method, which builds a huffman tree, and two private data members: the frequency table, stored as a vector of ints, and a pointer to the huffman tree it stores.
@@ -30,7 +37,24 @@ This method takes a bit, and traverses the tree to locate the symbol that it rep
 #### build_tree
 This method is the meat of the class - while this method didn't work, it was impossible to debug errors in the other two. It follows the algorithm described in the assignment. We gave the dummy nodes negative keys starting at -257 and counting up to aid in debugging. They could also all have a key of -1, and the method would work the same way. Also, we chose to ensure that if l is a long tree rather than a node containing a symbol, it is on the left. This gives the tree a less efficient shape that was easier for us to visualize and debug. Allowing it to match left and right by the smallest value will give a smaller tree, giving smaller codes.
 ###bitio.cc
-dunno shit about this - eli did this one.
+Includes the implementation of the bitio class. All functions should be
+explained and commented in the code itself. For the design of this, I chose
+to have bitio have a pending_ character which holds the current bit in progress.
+This is where the bits are stored for output until we reach one byte, so we can
+outstream the character (as we can't outsteam a single bit) and serves a similar
+function in reverse for the input, pulling the input byte into the pending_ character
+and then processing and outputting it one bit at a time.
+###encoder.cc
+This program inclues all of our previos classes. It is called with a number of files
+as arguments and produces .comp compressed versions of those files using our huffman
+compression. The file should contain comments explaining the code.
+##decoder.cc
+This program is similar to encoder, but takes .comp files (actually any files, but
+it will turn anything that isn't .comp into a pile of spaghetti) and produces decoded
+versions of them with a .plaintext extension. There are a few known errors in this,
+that may be due to huffman or due to issues in it's own file, but the final character
+in a file is sometimes no decoded properly. In some cases, a y at the end of the .txt
+becomes a u at the end of the .plaintext.
 ## Testing
 `verify.sh` takes two arguments, the first being the relative path to the directory containing *input* files in any text format and the second being a relative path to the directory containg *output* files with the extension `.comp.plaintext`. It expects every file in the output directory to have a matching source in the input directory. It uses the builtin `comp` program to compare the decompressed file and the corresponding source file. If any differences are found, it prints which file had errors and exits with error code 1. To test this script, I included several types of file, including one without any extension, to ensure that the script correctly matches the decompressed version and the original. The script was also tested against a file with spaces in the name to ensure correct behavior.
 Also, the program fails gracelessly if the file being encoded contains a character not in the extended ASCII set. To prevent this, I used [this](https://pteo.paranoiaworks.mobi/diacriticsremover/) site to remove diacritics, which are common characters not in the ASCII set.
@@ -38,11 +62,13 @@ Also, the program fails gracelessly if the file being encoded contains a charact
 First, several test files of various lengths were chosen. The largest, the bee movie script, is 53Kb. The `encoder` program was run on each of the files located in `txt-files` directory. The encoded files are then created in the same directory and then passed to `decoder`. Because `verify` looks for `.comp.plaintext` files and matches them with their originals, the presence of the `.comp` files in `txt-files` doesn't cause errors. Note that encoding and decoding can be somewhat time consuming. Encoding `constitution.txt`, a 49Kb file, took about 1 minute on a 2017 macbook pro. Decoding the resulting file took approximately 56 seconds on the same machine.
 ### Table
 
-|Filename                   | Original size (bytes) | Compressed size (bytes) | Percent of original|
-|---------------------------|-----------------------|-------------------------|--------------------|
-|bee-movie-script.txt       |52,755                 |31,409                   |59.40               |
-|constitution.txt           |45,119                 |25,690                   |56.94               |
-|Lab Ticket 1.md            | 1,135                 |   810                   |71.37               |
-|If.txt                     | 1,523                 | 1,032                   |67.76               |
-|never-gonna-give-you-up.txt| 1,758                 | 1,110                   |63.14               |
-|torch-of-life              |   963                 |   737                   |76.53               |
+|Filename                     | Original size (bytes) | Compressed size (bytes) | Percent of original|
+|-----------------------------|-----------------------|-------------------------|--------------------|
+|*bee-movie-script.txt*       |52,755                 |31,409                   |59.40               |
+|*constitution.txt*           |45,119                 |25,690                   |56.94               |
+|*Lab Ticket 1.md*            | 1,135                 |   810                   |71.37               |
+|*If.txt*                     | 1,523                 | 1,032                   |67.76               |
+|*never-gonna-give-you-up.txt*| 1,758                 | 1,110                   |63.14               |
+|*torch-of-life*              |   963                 |   737                   |76.53               |
+
+Note: the last line of some files does not correctly decompress. Bolded files above are not exact matches.
