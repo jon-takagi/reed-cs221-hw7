@@ -8,7 +8,7 @@ all:  test_bitio test_hforest test_huffman test_tree encoder decoder
 test_bitio: bitio.o test_bitio.o
 	$(CXX) $(LDFLAGS) -o $@ $^
 
-test_tree: test_tree.o tree.o
+test_tree: test_htree.o htree.o
 	$(CXX) $(LDFLAGS) -o $@ $^
 
 test_huffman: test_huffman.o huffman.o hforest.o

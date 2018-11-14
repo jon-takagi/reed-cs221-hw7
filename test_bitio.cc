@@ -139,6 +139,67 @@ test_100_bits()
 
 
 //////////////////////////////////////////////////////////////////////////////
+//tests the case of (11110000|1010) and its inverse (00001111|0101)- Not a multiple of eight bits, and 
+//importantly tests a change from 0 to 1 across the "byte gap," to ensure
+//that the byte gap is actually being handled properly.
+void edge_case_1()
+{
+  std::stringstream bits0, bits1;
+  {
+    BitIO bitio1(&bits1, nullptr);
+    for (int i = 0; i < 4; ++i) {
+      bitio1.output_bit(1);
+    }
+    for (int i = 0; i < 4; ++i) {
+      bitio1.output_bit(0);
+    }
+    bitio1.output_bit(1);
+    bitio1.output_bit(0);
+    bitio1.output_bit(1);
+    bitio1.output_bit(0);
+  }
+  {
+    BitIO bitio1(nullptr, &bits1);
+    for (int i = 0; i < 4; ++i) {
+      assert(bitio1.input_bit());
+    }
+    for (int i = 0; i < 4; ++i) {
+      assert(!bitio1.input_bit());
+    }
+    assert(bitio1.input_bit());
+    assert(!bitio1.input_bit());
+    assert(bitio1.input_bit());
+    assert(!bitio1.input_bit());
+  }
+  //Now testing inverse
+    {
+    BitIO bitio0(&bits0, nullptr);
+    for (int i = 0; i < 4; ++i) {
+      bitio0.output_bit(0);
+    }
+    for (int i = 0; i < 4; ++i) {
+      bitio0.output_bit(1);
+    }
+    bitio0.output_bit(0);
+    bitio0.output_bit(1);
+    bitio0.output_bit(0);
+    bitio0.output_bit(1);
+  }
+  {
+    BitIO bitio0(nullptr, &bits0);
+    for (int i = 0; i < 4; ++i) {
+      assert(!bitio0.input_bit());
+    }
+    for (int i = 0; i < 4; ++i) {
+      assert(bitio0.input_bit());
+    }
+    assert(!bitio0.input_bit());
+    assert(bitio0.input_bit());
+    assert(!bitio0.input_bit());
+    assert(bitio0.input_bit());
+  }
+}
+//////////////////////////////////////////////////////////////////////////////
 int
 main() {
   test_1_bit();
@@ -147,6 +208,7 @@ main() {
   test_9_bits();
   test_16_bits();
   test_100_bits();
+  void edge_case_1();
 
   return 0;
 }

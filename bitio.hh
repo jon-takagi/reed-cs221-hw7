@@ -22,4 +22,15 @@ class BitIO {
 
   // Read a single bit (or trailing zero)
   bool input_bit();
+  
+  private:
+  
+  char pending_;//the pending character which we are in the process of outputting or writing; stores up to 8 bits before we flush it out
+  
+  int count_;//the bit position of the pending character that we are currently working with
+  
+  std::istream* instream_;
+  
+  std::ostream* outstream_;
+  
 };
